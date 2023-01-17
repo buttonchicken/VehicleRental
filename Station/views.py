@@ -7,6 +7,7 @@ from rest_framework import status
 from Vehicle.serializers import VisibleCarSerializer
 from Vehicle.models import *
 from datetime import datetime
+from .serializers import StationSerializer
 
 # Create your views here.
 
@@ -20,6 +21,18 @@ class AddStation(APIView):
             return Response({'message':'Station Created Successfully !!', 'station_id': s.station_id },status=status.HTTP_202_ACCEPTED)
         except KeyError:
             return Response({'message':'Please enter location of the station'},status=status.HTTP_400_BAD_REQUEST)
+
+class GetAllStationDetails(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [isadmin]
+    def get(self,request):
+        try:
+            location = request.data['location']
+            st_obj = Station.objects.filter(location=location)
+            st_obj_data = StationSerializer(st_obj, many=True).data
+            return Response({'Stations Data':st_obj_data},status=status.HTTP_202_ACCEPTED)
+        except:
+            return Response({'message':'Invalid Station ID !!'},status=status.HTTP_400_BAD_REQUEST)
 
 class GetParkedCars(APIView):
     authentication_classes = [JWTAuthentication]
