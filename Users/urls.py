@@ -6,4 +6,5 @@ urlpatterns = [
     path('send_otp', SendOTP.as_view()),
     path('login', Login.as_view()),
     path('login_admin', LoginAdmin.as_view()),
+    path('previous_rides',PreviousRides.as_view())
 ]

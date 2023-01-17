@@ -8,6 +8,8 @@ from .serializers import *
 from django.utils import timezone
 from .utils import send_otp
 from django.contrib.auth import authenticate
+from Station.serializers import TransactionSerializer
+from Station.models import Transaction
 
 class SendOTP(APIView):
     def post(self,request):
@@ -75,3 +77,12 @@ class LoginAdmin(APIView):
                             status=status.HTTP_202_ACCEPTED)
         else:
             return Response({'message':'Invalid Credentials'},status=status.HTTP_400_BAD_REQUEST)
+
+class PreviousRides(APIView):
+    authentication_classes = [JWTAuthentication]
+    def get(self,request):
+        user = request.user
+        previous_rides = Transaction.objects.filter(user=user)
+        ride_data = TransactionSerializer(previous_rides,many=True).data
+        return Response({'Previous Rides':ride_data},status=status.HTTP_202_ACCEPTED)
+
