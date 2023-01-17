@@ -6,13 +6,14 @@ from Users.models import User
 class Station(models.Model):
     location = models.CharField(max_length=256, null=True)
     station_id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
-    total_cars = models.IntegerField(default=0)
-    cars_parked = models.ManyToManyField("Vehicle.Vehicle")
+    total_vehicles = models.IntegerField(default=0)
+    vehicles_parked = models.ManyToManyField("Vehicle.Vehicle")
 
 class Transaction(models.Model):
+    transaction_id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
     from_station = models.ForeignKey("Station.Station",on_delete=models.CASCADE, related_name='from_station')
     to_station = models.ForeignKey("Station.Station",on_delete=models.CASCADE, related_name='to_station')
-    car = models.ForeignKey("Vehicle.Vehicle",on_delete=models.CASCADE)
+    vehicle = models.ForeignKey("Vehicle.Vehicle",on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     pickup_datetime = models.DateTimeField()
     drop_datetime = models.DateTimeField()
